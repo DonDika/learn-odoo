@@ -7,18 +7,18 @@ class EstateProperty(models.Model):
     _description = "Estate Property"
     
     # untuk mendefinisikan field, digunakan untuk membuat fields di db atau tabel, di dalam tabel estate property ada field yang bernama name
-    name = fields.Char(required=True)
+    name = fields.Char("Title", required=True)
     description = fields.Text()
     postcode = fields.Char()
-    date_availability = fields.Date(copy=False, default=lambda self: fields.Datetime.now() + relativedelta(months=3)) # mencegah copy value saat di-duplicate & default availability date is in 3 months  
+    date_availability = fields.Date("Available From", copy=False, default=lambda self: fields.Datetime.now() + relativedelta(months=3)) # mencegah copy value saat di-duplicate & default availability date is in 3 months  
     expected_price = fields.Float(required=True)
     selling_price = fields.Float(readonly=True, copy=False) # tidak bisa input di view
     bedrooms = fields.Integer(default=2) # default value 
-    living_area = fields.Integer()
+    living_area = fields.Integer("Living Area (sqm)")
     facades = fields.Integer()
     garage = fields.Boolean()
     garden = fields.Boolean()
-    garden_area = fields.Integer()
+    garden_area = fields.Integer("Garden Area (sqm)")
     garden_orientation = fields.Selection(
         selection=[
             ('north', 'North'),
@@ -27,9 +27,7 @@ class EstateProperty(models.Model):
             ('west', 'West')
         ]
     )
-
     active = fields.Boolean(default=False) # jika active = false, maka tidak akan bisa dicari
-
     state = fields.Selection(
         selection = [
             ('new', 'New'),
