@@ -18,10 +18,9 @@
                 <field name="bedrooms"/>
                 <field name="living_area"/>
                 <field name="facades"/>
+                <field name="property_type_id"/>
                 <filter name="state" string="Available" domain="[('state','in',['new','offer_received'])]"/>
-
                 <filter name="postcode" string="Postcode" context="{'group_by':'postcode'}"/>
-
             </search>
         </field>
     </record>
@@ -33,6 +32,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
+                <field name="property_type_id"/>
                 <field name="postcode"/>
                 <field name="bedrooms"/>
                 <field name="living_area"/>
@@ -51,12 +51,14 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-
+                    <!-- header -->
                     <div class="oe_title">
                         <h1><field name="name"/></h1>
                     </div>
                     <group>
+                        <field name="tag_ids" widget="many2many_tags" class="pb-3"/>
                         <group>
+                            <field name="property_type_id"/>
                             <field name="postcode"/>
                             <field name="date_availability"/>
                             <field name="state" groups="base.group_no_one"/>
@@ -66,8 +68,9 @@
                             <field name="selling_price"/>
                         </group>
                     </group>
-
+                    <!-- tab -->
                     <notebook>
+                        <!-- tab description -->
                         <page string="Description">
                             <group>
                                 <field name="description"/>
@@ -80,16 +83,25 @@
                                 <field name="garden_orientation"/>
                             </group>
                         </page>
-
+                        <!-- tab offers -->
+                        <!-- otomatis akan nampilin list view (tree) dari model estate.property.offer yang terhubung dengan property ini. -->
+                        <page string="Offers">
+                            <field name="offer_ids"/>
+                        </page>
+                        <!-- tab other info -->
+                        <page string="Other Info">
+                            <group>
+                                <field name="salesperson_id"/>
+                                <field name="buyer_id"/>
+                            </group>
+                        </page>
+                        <!-- tab active -->
                         <page string="Active">
                             <group>
                                 <field name="active"/>
                             </group>
-
                         </page>
-
                     </notebook>
-
                 </sheet>
             </form> 
         </field>
