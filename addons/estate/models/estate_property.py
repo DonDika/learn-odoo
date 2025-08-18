@@ -1,4 +1,5 @@
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
 
 class EstateProperty(models.Model):
@@ -57,7 +58,7 @@ class EstateProperty(models.Model):
     offer_ids = fields.One2many("estate.property.offer", "property_id", string="Offers")
     
 
-    # compute field total area
+    # computed field
     total_area = fields.Float(compute="_compute_total_area", string="Total Area(sqm)")
 
     best_price = fields.Float(compute="_compute_best_price", string="Best Offer")
@@ -95,6 +96,24 @@ class EstateProperty(models.Model):
             self.garden_orientation = None
     
 
+    # a public method should always return something so that it can be called through XML-RPC. 
+    # When in doubt, just return True.
+    def action_sold(self):
+        for record in self:
+            if record.state == "canceled":
+                raise UserError("Canceled property cannot be sold")
+            record.state = "sold"
+        return True
+    
+    def action_cancel(self):
+        for record in self:
+            if record.state == "sold":
+                raise UserError("Sold property cannot be canceled")
+            record.state = "canceled"
+        return True
+
+
+    
 
 
     
